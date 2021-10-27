@@ -1,6 +1,5 @@
 import csv
 import folium
-import pandas as pd
 import webbrowser
 import math
 
@@ -158,9 +157,10 @@ if __name__ == "__main__":
 
     path_map = folium.Map(location = [center['lat'], center['long']], zoom_start=15)
 
-    raw_path = data_to_raw_path(data, True)
-    mean_path = mean_filter_to_path(data, True)
-    median_path = median_filter_to_path(data, True);
+    dedicated = False
+    raw_path = data_to_raw_path(data, dedicated)
+    mean_path = mean_filter_to_path(data, dedicated)
+    median_path = median_filter_to_path(data, dedicated);
 
     draw_path(path_map, raw_path, 'gray', 3)
     draw_path(path_map, mean_path, 'red', 3)
