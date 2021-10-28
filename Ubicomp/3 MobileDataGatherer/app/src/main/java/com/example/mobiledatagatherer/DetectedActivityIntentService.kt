@@ -40,18 +40,18 @@ class DetectedActivityIntentService : IntentService(TAG) {
             builder.append("," + getActivityString(activity.type) + ":" + activity.confidence)
         }
         builder.append("\n")
-        Log.i(TAG, builder.toString());
+        Log.i(DetectedActivityIntentService.TAG, builder.toString());
 
         try {
             var external: File = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
             var path : String = external.absolutePath + "/ActivityData.csv";
             var stream: FileOutputStream =
-                FileOutputStream(path, true)
+                    FileOutputStream(path, true)
             stream.write(builder.toString().toByteArray());
             stream.close()
             Log.i(
-                TAG,
-                "Data succesfully written to " + path
+                    DetectedActivityIntentService.TAG,
+                    "Data succesfully written to " + path
             );
         } catch (e: FileNotFoundException) {
             e.printStackTrace();
