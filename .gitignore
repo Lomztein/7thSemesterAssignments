@@ -122,3 +122,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+Ubicomp/3 Measurement Plotter/julies.py
+
+Ubicomp/3 Measurement Plotter/moredata.csv
