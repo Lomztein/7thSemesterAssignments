@@ -11,30 +11,33 @@ namespace _4_ApplyingTactics
         static void Main(string[] args)
         {
             double[] dummy = GenerateDummyData(10, 100, 666);
-            int bogosToDo = 10;
+            int bogosToDo = 50;
 
-            // Do simple, non-concurrent computation.
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+            /* Do simple, non-concurrent computation.
             for (int i = 0; i < bogosToDo; i++)
             {
                 CancellationTokenSource src = new CancellationTokenSource();
                 CancellationToken token = src.Token;
 
                 RunBogo(dummy, token, x => { });
-                Console.WriteLine($"{i + 1} / {bogosToDo} single-threaded bogos completed.");
+                Console.Write(i + 1 + " ");
             }
-            Console.WriteLine($"{bogosToDo} single-threaded bogos took: {stopwatch.ElapsedMilliseconds} millseconds.");
+            Console.Write('\n');
+            Console.WriteLine($"{bogosToDo} single-threaded bogos took on avarage: {stopwatch.ElapsedMilliseconds / (float)bogosToDo} millseconds.");
+            */
 
             // Do multi-threaded bogo-sort.
             stopwatch.Reset();
             stopwatch.Start();
             for (int i = 0; i < bogosToDo; i++)
             {
-                RunBogoConcurrent(dummy, 8, x => { });
-                Console.WriteLine($"{i + 1} / {bogosToDo} multi-threaded bogos completed.");
+                RunBogoConcurrent(dummy, 16, x => { });
+                Console.Write(i + 1 + " ");
             }
-            Console.WriteLine($"{bogosToDo} multi-threaded bogos took: {stopwatch.ElapsedMilliseconds} millseconds.");
+            Console.Write('\n');
+            Console.WriteLine($"{bogosToDo} multi-threaded bogos took on avarage: {stopwatch.ElapsedMilliseconds / (float)bogosToDo} millseconds.");
         }
 
         private static double[] GenerateDummyData(int num, double max, int seed)
@@ -62,7 +65,7 @@ namespace _4_ApplyingTactics
         private static void RunBogoConcurrent(double[] numbers, int numThreads, Action<double[]> callback)
         {
             Thread[] threads = new Thread[numThreads];
-
+            bool completed = false;
 
             void RunBogoInstance (CancellationToken token)
             {
@@ -81,6 +84,7 @@ namespace _4_ApplyingTactics
                 {
                     src.Cancel();
                 }
+                completed = true;
                 callback(result);
             }
 
@@ -88,6 +92,11 @@ namespace _4_ApplyingTactics
             {
                 threads[i] = new Thread(() => RunBogoInstance(token));
                 threads[i].Start();
+            }
+
+            while (completed == false)
+            {
+                Thread.Sleep(10);
             }
         }
 
